@@ -52,6 +52,31 @@
             {% endif %}"
             href="{% url 'posts:profile' user.username %}"> <b>Пользователь: {{user.username}}</b></a>
           </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-link position-relative" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <img src="{% static 'img/fav/bell.svg' %}" alt="" width="30" height="30">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                99+
+                <span class="visually-hidden">непрочитанные сообщения</span>
+              </span>
+            </button>
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Уведомления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
           {% else %}
           <li class="nav-item"> 
             <a class="nav-link link-light
