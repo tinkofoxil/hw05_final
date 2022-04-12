@@ -16,7 +16,7 @@ from posts.views import NUMBERS_OF_POST
 TEST_NUMBER_OF_POST = 13
 FIRST_NUMBER_OF_POST = 1
 
-TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.MEDIA_ROOT)
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
