@@ -105,7 +105,7 @@ class TaskPagesTests(TestCase):
 
     def test_post_follow_page_authorized_uses_correct_template(self):
         """URL-адреса используют шаблон posts/create.html."""
-        response = self.authorized_client.get('/follow/')
+        response = self.authorized_client.get(reverse('posts:follow_index'))
         self.assertTemplateUsed(response, 'posts/follow.html')
 
     def test_index_page_show_correct_context(self):
@@ -142,7 +142,30 @@ class TaskPagesTests(TestCase):
         )
         image = response.context["page_obj"][0].image
         self.assertEqual(image.read(), self.small_gif)
-        self.authorized_client.force_login(self.user)
+
+    def test_follow(self):
+        self.authorized_client.force_login(self.follower)
+        self.authorized_client.get(
+            reverse('posts:profile_follow', kwargs={'username': 'auth'}))
+        self.assertTrue(Follow.objects.filter(
+            author=self.user, user=self.follower
+        ).exists())
+
+    def test_unfollow(self):
+        self.authorized_client.force_login(self.follower)
+        self.authorized_client.get(
+            reverse('posts:profile_unfollow', kwargs={'username': 'auth'}))
+        self.assertFalse(Follow.objects.filter(
+            author=self.user, user=self.follower
+        ).exists())
+
+    def test_follow_myself(self):
+        self.authorized_client.force_login(self.follower)
+        self.authorized_client.get(
+            reverse('posts:profile_follow', kwargs={'username': 'follower'}))
+        self.assertFalse(Follow.objects.filter(
+            author=self.follower, user=self.follower
+        ).exists())
 
     def test_group_posts_page_show_correct_context(self):
         """Шаблон group_list сформирован с правильным контекстом."""

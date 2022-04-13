@@ -10,7 +10,7 @@ NUMBERS_OF_POST = 10
 
 def index(request):
     post_list = Post.objects.all().order_by('-pub_date')
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, NUMBERS_OF_POST)
     title = 'Последние обновления на сайте'
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -25,7 +25,7 @@ def group_posts(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
     post_list = group.posts.all().order_by('-pub_date')
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, NUMBERS_OF_POST)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -38,7 +38,7 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     post_list = Post.objects.filter(author=author).order_by('-pub_date')
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, NUMBERS_OF_POST)
     post_count = post_list.filter(author_id=author).count()
     title = f'Профайл пользователя {author}'
     page_number = request.GET.get('page')
@@ -124,9 +124,9 @@ def follow_index(request):
     for follow in following:
         follow_list.append(follow.author)
     post_list = Post.objects.filter(
-        author__in=follow_list
+        author__following__user=request.user
     ).order_by('-pub_date')
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, NUMBERS_OF_POST)
     title = 'Ваши подписки'
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -141,10 +141,8 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     user = request.user
-    if user != author and not Follow.objects.filter(
-        author=author, user=request.user
-    ).exists():
-        Follow.objects.create(user=user, author=author)
+    if user != author:
+        Follow.objects.get_or_create(user=user, author=author)
     return redirect('posts:profile', username=username)
 
 

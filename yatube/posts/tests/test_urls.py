@@ -72,6 +72,7 @@ class PostURLTests(TestCase):
             'posts/group_list.html': '/group/test-slug/',
             'posts/profile.html': f'/profile/{self.user}/',
             'posts/post_detail.html': f'/posts/{self.post.id}/',
+            'core/404.html': '/unexisting_page/',
         }
         for template, url in templates_url_names.items():
             with self.subTest(url=url):
