@@ -154,6 +154,11 @@ class TaskPagesTests(TestCase):
     def test_unfollow(self):
         self.authorized_client.force_login(self.follower)
         self.authorized_client.get(
+            reverse('posts:profile_follow', kwargs={'username': 'auth'}))
+        self.assertTrue(Follow.objects.filter(
+            author=self.user, user=self.follower
+        ).exists())
+        self.authorized_client.get(
             reverse('posts:profile_unfollow', kwargs={'username': 'auth'}))
         self.assertFalse(Follow.objects.filter(
             author=self.user, user=self.follower

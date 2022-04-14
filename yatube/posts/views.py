@@ -119,10 +119,6 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    following = Follow.objects.filter(user=request.user)
-    follow_list = []
-    for follow in following:
-        follow_list.append(follow.author)
     post_list = Post.objects.filter(
         author__following__user=request.user
     ).order_by('-pub_date')
